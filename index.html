@@ -13,8 +13,18 @@
   <body class="bg-neutral-50">
     <div id="root"></div>
 
-    <!-- Visitor Map Widget -->
-    <div style="text-align: center; margin: 30px 0;">
+    <!-- Hidden visitor tracker -->
+    <div
+      style="
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+      "
+      aria-hidden="true"
+    >
       <script
         type="text/javascript"
         id="mapmyvisitors"
