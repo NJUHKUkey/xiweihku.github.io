@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 
 type Author = {
   name: string
@@ -270,13 +270,50 @@ const projectItems: ProjectItem[] = [
 ]
 
 const navItems = [
-  { key: 'about', label: 'About' },
-  { key: 'publications', label: 'Publications' },
-  { key: 'projects-services', label: 'Projects & Services' },
-  { key: 'awards', label: 'Honors & Awards' },
-] as const
+  { href: '#about', label: 'About' },
+  { href: '#publications', label: 'Publications' },
+  { href: '#projects-services', label: 'Projects & Services' },
+  { href: '#awards', label: 'Honors & Awards' },
+]
 
-type PageKey = (typeof navItems)[number]['key']
+const researchAreas = [
+  {
+    title: 'Intercity mobility and regional integration',
+    description:
+      'Understanding how daily cross-city movements reshape activity spaces, commuting systems, and regional urban networks.',
+  },
+  {
+    title: 'Accessibility, activity space, and social equity',
+    description:
+      'Measuring how people actually reach urban opportunities across neighborhoods, facilities, and transport environments.',
+  },
+  {
+    title: 'X-minute cities and climate-adaptive communities',
+    description:
+      'Evaluating community life circles, effective accessibility, and service provision under changing environmental conditions.',
+  },
+]
+
+const educationItems = [
+  {
+    school: 'The University of Hong Kong, Hong Kong SAR, China',
+    degree: 'Ph.D. in Urban Planning',
+    supervisor: 'Supervisor: Prof. Jiangping Zhou',
+    time: 'Sep. 2024 – present',
+  },
+  {
+    school: 'Nanjing University, Nanjing, China',
+    degree: 'M.Eng. in Urban Planning',
+    supervisor: 'Supervisor: Prof. Feng Zhen',
+    time: 'Sep. 2021 – Jun. 2024',
+  },
+  {
+    school: 'Nanjing University, Nanjing, China',
+    degree: 'B.Eng. in Urban and Rural Planning',
+    supervisor: 'Supervisor: Prof. Guangliang Xi',
+    time: 'Sep. 2016 – Jun. 2021',
+  },
+]
 
 function uniqueSortedYears(items: Publication[]) {
   return ['All', ...Array.from(new Set(items.map((p) => p.year))).sort((a, b) => Number(b) - Number(a))]
@@ -296,17 +333,13 @@ function filterPublications(items: Publication[], selectedYear: string, selected
 
 function AuthorList({ authors }: { authors: Author[] }) {
   return (
-    <p className="mt-3 text-sm leading-7 text-neutral-600">
+    <p className="mt-3 text-sm leading-7 text-slate-600">
       {authors.map((author, index) => {
         const suffix = author.corresponding ? ' *' : ''
         return (
           <span key={`${author.name}-${index}`}>
             {index > 0 ? ', ' : ''}
-            {author.highlight ? (
-              <strong className="font-semibold text-neutral-900">{author.name}</strong>
-            ) : (
-              <span>{author.name}</span>
-            )}
+            {author.highlight ? <strong className="font-semibold text-slate-950">{author.name}</strong> : <span>{author.name}</span>}
             <span>{suffix}</span>
           </span>
         )
@@ -318,132 +351,141 @@ function AuthorList({ authors }: { authors: Author[] }) {
 function SectionHeader({ eyebrow, title, description }: { eyebrow: string; title: string; description?: string }) {
   return (
     <div className="mb-10">
-      <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">{eyebrow}</p>
-      <h2 className="mt-3 text-4xl font-semibold tracking-tight text-neutral-900">{title}</h2>
-      {description ? <p className="mt-4 max-w-3xl text-base leading-7 text-neutral-600">{description}</p> : null}
+      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#8B1E3F]">{eyebrow}</p>
+      <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 md:text-4xl">{title}</h2>
+      {description ? <p className="mt-4 max-w-3xl text-base leading-8 text-slate-600">{description}</p> : null}
     </div>
   )
 }
 
-function AboutPage() {
-  const educationItems = [
-    {
-      school: 'The University of Hong Kong, Hong Kong SAR, China',
-      degree: 'Ph.D in Urban Planning',
-      supervisor: 'Supervisor: Prof. Jiangping Zhou',
-      time: 'Sep. 2024 – present',
-    },
-    {
-      school: 'Nanjing University, Nanjing, China',
-      degree: 'M.Eng in Urban Planning',
-      supervisor: 'Supervisor: Prof. Feng Zhen',
-      time: 'Sep. 2021 – Jun. 2024',
-    },
-    {
-      school: 'Nanjing University, Nanjing, China',
-      degree: 'B.Eng in Urban and Rural Planning',
-      supervisor: 'Supervisor: Prof. Guangliang Xi',
-      time: 'Sep. 2016 – Jun. 2021',
-    },
-  ]
+function LinkButton({ href, children, variant = 'secondary' }: { href: string; children: ReactNode; variant?: 'primary' | 'secondary' }) {
+  const className =
+    variant === 'primary'
+      ? 'inline-flex items-center justify-center rounded-full bg-[#1E3A5F] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#162c49] hover:shadow-md'
+      : 'inline-flex items-center justify-center rounded-full border border-slate-300 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-[#1E3A5F] hover:text-[#1E3A5F] hover:shadow-md'
 
-  const interests = ['Accessibility and Sustainable Mobility', 'Intercity Mobility and Regional Development']
+  const isInternal = href.startsWith('#')
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-16">
-      <SectionHeader
-        eyebrow="About"
-        title="About Me"
-        description=" "
-      />
+    <a href={href} className={className} target={isInternal ? undefined : '_blank'} rel={isInternal ? undefined : 'noreferrer'}>
+      {children}
+    </a>
+  )
+}
 
-      <div className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-        <div className="flex flex-col gap-6 md:flex-row md:items-start">
+function StatCard({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="rounded-3xl border border-white/60 bg-white/80 p-5 shadow-sm backdrop-blur">
+      <p className="text-2xl font-semibold text-[#1E3A5F]">{value}</p>
+      <p className="mt-1 text-sm leading-6 text-slate-500">{label}</p>
+    </div>
+  )
+}
+
+function HeroSection() {
+  return (
+    <section id="about" className="relative overflow-hidden border-b border-slate-200 bg-[radial-gradient(circle_at_top_left,_#dbeafe,_transparent_34%),linear-gradient(135deg,_#f8fafc_0%,_#eef2f7_100%)]">
+      <div className="absolute right-[-8rem] top-[-8rem] h-80 w-80 rounded-full bg-[#8B1E3F]/10 blur-3xl" />
+      <div className="absolute bottom-[-12rem] left-[-8rem] h-96 w-96 rounded-full bg-[#1E3A5F]/10 blur-3xl" />
+
+      <div className="relative mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-[1.08fr_0.92fr] md:items-center md:py-24">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#8B1E3F]">Academic Website</p>
+          <h1 className="mt-5 text-5xl font-semibold tracking-tight text-slate-950 md:text-7xl">Xi Wei</h1>
+          <p className="mt-5 max-w-2xl text-xl leading-9 text-slate-700">
+            PhD Candidate in Urban Planning at The University of Hong Kong, studying intercity mobility, activity spaces, accessibility, and climate-adaptive community life circles.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <LinkButton href="mailto:weixi1998@connect.hku.hk" variant="primary">Email</LinkButton>
+            <LinkButton href="https://github.com/xiweihku">GitHub</LinkButton>
+            <LinkButton href="#publications">Publications</LinkButton>
+          </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+            <StatCard value={`${publications.length}+`} label="Publications and research outputs" />
+            <StatCard value="HKU" label="Department of Urban Planning and Design" />
+            <StatCard value="2" label="Core research themes" />
+          </div>
+        </div>
+
+        <div className="rounded-[2rem] border border-white/70 bg-white/80 p-6 shadow-2xl shadow-slate-200/70 backdrop-blur">
           <img
             src="/photo.jpg"
             alt="Xi Wei"
-            className="h-36 w-36 shrink-0 rounded-full object-cover object-center ring-1 ring-neutral-200"
+            className="aspect-[4/5] w-full rounded-[1.5rem] object-cover object-center shadow-sm"
           />
-          <div>
-            <h3 className="text-3xl font-semibold tracking-tight text-neutral-900">Xi Wei</h3>
-            <p className="mt-3 text-base leading-8 text-neutral-600">
-              Department of Urban Planning and Design
-              <br />
-              The University of Hong Kong
-            </p>
+          <div className="mt-6 rounded-3xl bg-slate-950 p-6 text-white">
+            <p className="text-lg font-semibold">Department of Urban Planning and Design</p>
+            <p className="mt-2 text-sm leading-7 text-slate-300">The University of Hong Kong</p>
           </div>
         </div>
       </div>
-
-      <div className="mt-10 space-y-10">
-        <section>
-          <div className="mb-4 border-b border-neutral-200 pb-4">
-            <h3 className="text-2xl font-semibold tracking-tight text-neutral-900">Biography</h3>
-          </div>
-          <div className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-            <div className="space-y-5 text-base leading-8 text-neutral-700">
-              <p>
-                Xi Wei is a PhD candidate in the Department of Urban Planning and Design at The University of Hong Kong. He received his master's degree in Urban Planning from the School of Architecture and Urban Planning at Nanjing University in June 2024, and his bachelor's degree in Urban and Rural Planning from the School of Architecture and Urban Planning at Nanjing University in June 2021.
-              </p>
-              <p>
-                His research focuses on two primary areas: X-minute cities and intercity mobility. By bridging the gap between cutting-edge technology and traditional planning principles, he is dedicated to informing future urban and regional planning policies that foster highly livable, inclusive, and efficient frameworks for transportation and community development.
-              </p>
-              <p>
-                He has published several peer-reviewed papers and received multiple awards, including the National Scholarship awarded by the Ministry of Education of the PRC and the Chengyuan Cup Planning Decision-Support Model Competition prizes.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div className="mb-4 border-b border-neutral-200 pb-4">
-            <h3 className="text-2xl font-semibold tracking-tight text-neutral-900">Research Interests</h3>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {interests.map((item) => (
-              <div
-                key={item}
-                className="rounded-3xl border border-neutral-200 bg-white px-6 py-8 text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                <p className="text-lg leading-8 text-neutral-800">{item}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section>
-          <div className="mb-4 border-b border-neutral-200 pb-4">
-            <h3 className="text-2xl font-semibold tracking-tight text-neutral-900">Education</h3>
-          </div>
-          <div className="space-y-4">
-            {educationItems.map((edu) => (
-              <div
-                key={`${edu.school}-${edu.degree}`}
-                className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                <p className="text-lg font-semibold text-neutral-900">{edu.school}</p>
-                <p className="mt-2 text-sm leading-7 text-neutral-600">{edu.degree}</p>
-                <p className="text-sm leading-7 text-neutral-600">{edu.supervisor}</p>
-                <p className="text-sm leading-7 text-neutral-600">{edu.time}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section>
-          <div className="mb-4 border-b border-neutral-200 pb-4">
-            <h3 className="text-2xl font-semibold tracking-tight text-neutral-900">Contact</h3>
-          </div>
-          <div className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-            <p className="text-base leading-8 text-neutral-700">Email: weixi1998@connect.hku.hk</p>
-          </div>
-        </section>
-      </div>
-    </div>
+    </section>
   )
 }
 
-function PublicationsPage({
+function AboutDetails() {
+  return (
+    <section className="mx-auto max-w-6xl px-6 py-16">
+      <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+        <div>
+          <SectionHeader
+            eyebrow="Profile"
+            title="Research profile"
+            description="My work connects transport geography, urban analytics, and planning policy to understand how mobility systems reshape everyday access to urban opportunities."
+          />
+        </div>
+        <div className="space-y-5 text-base leading-8 text-slate-700">
+          <p>
+            Xi Wei is a PhD candidate in the Department of Urban Planning and Design at The University of Hong Kong. He received his master's degree in Urban Planning from Nanjing University in June 2024 and his bachelor's degree in Urban and Rural Planning from Nanjing University in June 2021.
+          </p>
+          <p>
+            His research focuses on intercity mobility, X-minute cities, activity spaces, accessibility, and urban spatial restructuring. By combining mobile phone data, geospatial analytics, and urban planning theory, his work aims to inform more inclusive, efficient, and climate-resilient urban and regional planning.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-14 grid gap-5 md:grid-cols-3">
+        {researchAreas.map((area, index) => (
+          <article key={area.title} className="group rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:border-[#1E3A5F]/30 hover:shadow-xl">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#1E3A5F] text-sm font-semibold text-white">0{index + 1}</div>
+            <h3 className="mt-6 text-xl font-semibold leading-7 text-slate-950">{area.title}</h3>
+            <p className="mt-4 text-sm leading-7 text-slate-600">{area.description}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="mt-14 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+        <section>
+          <h3 className="border-b border-slate-200 pb-4 text-2xl font-semibold tracking-tight text-slate-950">Education</h3>
+          <div className="mt-5 space-y-4">
+            {educationItems.map((edu) => (
+              <div key={`${edu.school}-${edu.degree}`} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                <p className="text-lg font-semibold text-slate-950">{edu.school}</p>
+                <p className="mt-2 text-sm leading-7 text-slate-600">{edu.degree}</p>
+                <p className="text-sm leading-7 text-slate-600">{edu.supervisor}</p>
+                <p className="text-sm leading-7 text-slate-500">{edu.time}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h3 className="border-b border-slate-200 pb-4 text-2xl font-semibold tracking-tight text-slate-950">Contact</h3>
+          <div className="mt-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#8B1E3F]">Email</p>
+            <a className="mt-3 block text-base font-medium text-slate-950 underline decoration-slate-300 underline-offset-4 hover:decoration-[#1E3A5F]" href="mailto:weixi1998@connect.hku.hk">
+              weixi1998@connect.hku.hk
+            </a>
+            <p className="mt-6 text-sm font-semibold uppercase tracking-[0.18em] text-[#8B1E3F]">Location</p>
+            <p className="mt-3 text-base leading-7 text-slate-700">Hong Kong SAR, China</p>
+          </div>
+        </section>
+      </div>
+    </section>
+  )
+}
+
+function PublicationsSection({
   selectedYear,
   setSelectedYear,
   selectedTheme,
@@ -459,212 +501,192 @@ function PublicationsPage({
   const filtered = useMemo(() => filterPublications(publications, selectedYear, selectedTheme), [selectedYear, selectedTheme])
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-16">
-      <SectionHeader
-        eyebrow="Publications"
-        title="Research Outputs"
-        description=" "
-      />
+    <section id="publications" className="border-y border-slate-200 bg-white/70">
+      <div className="mx-auto max-w-6xl px-6 py-16">
+        <SectionHeader
+          eyebrow="Publications"
+          title="Research outputs"
+          description="Selected peer-reviewed articles and Chinese-language publications on mobility, accessibility, digital urbanism, and urban development."
+        />
 
-      <div className="mb-8 grid gap-4 rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl md:grid-cols-2">
-        <div>
-          <label className="mb-2 block text-sm font-medium text-neutral-800">Filter by Year</label>
-          <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
-            className="w-full rounded-2xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-500"
-          >
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="mb-2 block text-sm font-medium text-neutral-800">Filter by Theme</label>
-          <select
-            value={selectedTheme}
-            onChange={(e) => setSelectedTheme(e.target.value)}
-            className="w-full rounded-2xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-500"
-          >
-            {themes.map((theme) => (
-              <option key={theme} value={theme}>
-                {theme}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        {filtered.map((pub) => (
-          <div
-            key={`${pub.title}-${pub.year}`}
-            className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div className="max-w-4xl">
-                <a
-                  href={pub.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-lg font-medium text-neutral-900 underline decoration-neutral-300 underline-offset-4 transition hover:decoration-neutral-700"
-                >
-                  {pub.title}
-                </a>
-                <AuthorList authors={pub.authors} />
-                <p className="mt-2 text-sm text-neutral-500">
-                  {pub.venue} · {pub.year}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {pub.themes.map((theme) => (
-                    <span
-                      key={theme}
-                      className="rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-medium text-neutral-600"
-                    >
-                      {theme}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">{pub.status}</span>
-            </div>
+        <div className="mb-8 grid gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:grid-cols-2">
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-slate-800">Filter by year</label>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10"
+            >
+              {years.map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
           </div>
-        ))}
-      </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-slate-800">Filter by theme</label>
+            <select
+              value={selectedTheme}
+              onChange={(e) => setSelectedTheme(e.target.value)}
+              className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10"
+            >
+              {themes.map((theme) => (
+                <option key={theme} value={theme}>{theme}</option>
+              ))}
+            </select>
+          </div>
+        </div>
 
-      <p className="mt-6 text-sm text-neutral-500">* Corresponding author</p>
-    </div>
+        <div className="space-y-4">
+          {filtered.map((pub) => (
+            <article key={`${pub.title}-${pub.year}`} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="max-w-4xl">
+                  <a
+                    href={pub.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-lg font-semibold leading-8 text-slate-950 underline decoration-slate-300 underline-offset-4 transition hover:decoration-[#1E3A5F]"
+                  >
+                    {pub.title}
+                  </a>
+                  <AuthorList authors={pub.authors} />
+                  <p className="mt-2 text-sm text-slate-500"><span className="italic">{pub.venue}</span> · {pub.year}</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {pub.themes.map((theme) => (
+                      <span key={theme} className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+                        {theme}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <span className="rounded-full bg-[#1E3A5F]/10 px-3 py-1 text-xs font-semibold text-[#1E3A5F]">{pub.status}</span>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <p className="mt-6 text-sm text-slate-500">* Corresponding author</p>
+      </div>
+    </section>
   )
 }
 
-function ProjectsServicesPage() {
+function ProjectsServicesSection() {
   return (
-    <div className="mx-auto max-w-6xl px-6 py-16">
+    <section id="projects-services" className="mx-auto max-w-6xl px-6 py-16">
       <SectionHeader
         eyebrow="Projects & Services"
-        title="Grants, Projects, and Academic Service"
-        description=" "
+        title="Grants, projects, and academic service"
+        description="Research-related projects, applied planning experience, and academic service roles."
       />
 
-      <section>
-        <div className="mb-4 border-b border-neutral-200 pb-4">
-          <h3 className="text-2xl font-semibold tracking-tight text-neutral-900">Research Grants</h3>
-        </div>
-        <div className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-          <p className="text-sm leading-7 text-neutral-600">Participatory role only (Non-PI status)</p>
-        </div>
-      </section>
-
-      <section className="mt-10">
-        <div className="mb-4 border-b border-neutral-200 pb-4">
-          <h3 className="text-2xl font-semibold tracking-tight text-neutral-900">Projects</h3>
-        </div>
-        <div className="space-y-4">
-          {projectItems.map((project) => (
-            <div
-              key={project.title}
-              className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-            >
-              <p className="text-lg font-semibold leading-7 text-neutral-900">{project.title}</p>
-              <p className="mt-2 text-sm leading-7 text-neutral-500">{project.time}</p>
-              <p className="mt-3 text-sm leading-7 text-neutral-600">{project.description}</p>
+      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="space-y-8">
+          <section>
+            <h3 className="border-b border-slate-200 pb-4 text-2xl font-semibold tracking-tight text-slate-950">Research Grants</h3>
+            <div className="mt-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <p className="text-sm leading-7 text-slate-600">Participatory role only (Non-PI status)</p>
             </div>
-          ))}
-        </div>
-      </section>
+          </section>
 
-      <section className="mt-10">
-        <div className="mb-4 border-b border-neutral-200 pb-4">
-          <h3 className="text-2xl font-semibold tracking-tight text-neutral-900">Services</h3>
-        </div>
-        <div className="space-y-4">
-          {services.map((service) => (
-            <div
-              key={`${service.role}-${service.organization}`}
-              className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-            >
-              <p className="text-base font-semibold text-neutral-900">{service.role}</p>
-              <p className="mt-2 text-sm leading-7 text-neutral-600">{service.organization}</p>
-              <p className="text-sm leading-7 text-neutral-500">{service.time}</p>
+          <section>
+            <h3 className="border-b border-slate-200 pb-4 text-2xl font-semibold tracking-tight text-slate-950">Academic Service</h3>
+            <div className="mt-5 space-y-4">
+              {services.map((service) => (
+                <div key={`${service.role}-${service.organization}`} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                  <p className="text-base font-semibold text-slate-950">{service.role}</p>
+                  <p className="mt-2 text-sm leading-7 text-slate-600">{service.organization}</p>
+                  <p className="text-sm leading-7 text-slate-500">{service.time}</p>
+                </div>
+              ))}
             </div>
-          ))}
+          </section>
         </div>
-      </section>
-    </div>
+
+        <section>
+          <h3 className="border-b border-slate-200 pb-4 text-2xl font-semibold tracking-tight text-slate-950">Projects</h3>
+          <div className="mt-5 space-y-4">
+            {projectItems.map((project) => (
+              <article key={project.title} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+                <p className="text-lg font-semibold leading-7 text-slate-950">{project.title}</p>
+                <p className="mt-2 text-sm leading-7 text-[#8B1E3F]">{project.time}</p>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{project.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
+    </section>
   )
 }
 
-function AwardsPage() {
+function AwardsSection() {
   return (
-    <div className="mx-auto max-w-6xl px-6 py-16">
-      <SectionHeader
-        eyebrow="Honors & Awards"
-        title="Scholarships, prizes, and academic distinctions"
-        description=" "
-      />
-      <div className="grid gap-4 md:grid-cols-2">
-        {awards.map((award) => (
-          <div
-            key={award.name}
-            className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-          >
-            <p className="text-base font-semibold leading-7 text-neutral-900">{award.name}</p>
-            <p className="mt-2 text-sm leading-7 text-neutral-500">{award.time}</p>
-            <p className="text-sm leading-7 text-neutral-500">{award.grantor}</p>
-          </div>
-        ))}
+    <section id="awards" className="border-t border-slate-200 bg-slate-950 text-white">
+      <div className="mx-auto max-w-6xl px-6 py-16">
+        <div className="mb-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#f4b6c6]">Honors & Awards</p>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Scholarships, prizes, and academic distinctions</h2>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          {awards.map((award) => (
+            <article key={award.name} className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-sm transition hover:-translate-y-1 hover:bg-white/10">
+              <p className="text-base font-semibold leading-7 text-white">{award.name}</p>
+              <p className="mt-2 text-sm leading-7 text-slate-300">{award.time}</p>
+              <p className="text-sm leading-7 text-slate-300">{award.grantor}</p>
+            </article>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<PageKey>('about')
   const [selectedYear, setSelectedYear] = useState('All')
   const [selectedTheme, setSelectedTheme] = useState('All')
 
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900">
-      <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/85 backdrop-blur">
+    <div className="min-h-screen bg-slate-50 text-slate-950">
+      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-          <button onClick={() => setCurrentPage('about')} className="text-left">
-            <h1 className="text-lg font-semibold tracking-tight">Xi Wei</h1>
-            <p className="text-sm text-neutral-500">Academic Website</p>
-          </button>
-          <nav className="flex flex-wrap gap-2 md:gap-3">
-            {navItems.map((item) => {
-              const active = currentPage === item.key
-              return (
-                <button
-                  key={item.key}
-                  onClick={() => setCurrentPage(item.key)}
-                  className={`rounded-full px-4 py-2 text-sm transition duration-300 hover:shadow-md ${
-                    active ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              )
-            })}
+          <a href="#about" className="text-left">
+            <h1 className="text-lg font-semibold tracking-tight text-slate-950">Xi Wei</h1>
+            <p className="text-sm text-slate-500">Urban Planning · Mobility · Accessibility</p>
+          </a>
+          <nav className="flex flex-wrap gap-2 md:gap-3" aria-label="Primary navigation">
+            {navItems.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-[#1E3A5F]"
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
         </div>
       </header>
 
       <main>
-        {currentPage === 'about' && <AboutPage />}
-        {currentPage === 'publications' && (
-          <PublicationsPage
-            selectedYear={selectedYear}
-            setSelectedYear={setSelectedYear}
-            selectedTheme={selectedTheme}
-            setSelectedTheme={setSelectedTheme}
-          />
-        )}
-        {currentPage === 'projects-services' && <ProjectsServicesPage />}
-        {currentPage === 'awards' && <AwardsPage />}
+        <HeroSection />
+        <AboutDetails />
+        <PublicationsSection
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
+          selectedTheme={selectedTheme}
+          setSelectedTheme={setSelectedTheme}
+        />
+        <ProjectsServicesSection />
+        <AwardsSection />
       </main>
+
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-8 text-sm text-slate-500 md:flex-row md:items-center md:justify-between">
+          <p>© {new Date().getFullYear()} Xi Wei. Built with React, Vite, and GitHub Pages.</p>
+          <a href="mailto:weixi1998@connect.hku.hk" className="hover:text-[#1E3A5F]">weixi1998@connect.hku.hk</a>
+        </div>
+      </footer>
     </div>
   )
 }
