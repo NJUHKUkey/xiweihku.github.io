@@ -87,7 +87,7 @@ const publications: Publication[] = [
       { name: '魏玺', highlight: true, corresponding: false },
       { name: '肖徐玏', highlight: false, corresponding: false },
     ],
-    venue: 'Journal of Transport Geography',
+    venue: '资源科学',
     year: '2025',
     themes: ['ICT', 'Urban development'],
     status: 'Published',
