@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Academic Website Maintenance Panel</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --panel: #ffffff;
+      --text: #17202a;
+      --muted: #667085;
+      --line: #d9dee7;
+      --accent: #0f766e;
+      --accent-dark: #0b5f59;
+      --danger: #b42318;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.5;
+    }
+    header {
+      background: #102a43;
+      color: #fff;
+      padding: 26px clamp(18px, 4vw, 48px);
+    }
+    h1, h2 { margin: 0; letter-spacing: 0; }
+    header h1 { font-size: clamp(24px, 3vw, 34px); }
+    header p { color: #c9d6e2; max-width: 980px; margin: 8px 0 0; }
+    main {
+      display: grid;
+      grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+      gap: 22px;
+      padding: 24px clamp(14px, 3vw, 48px) 36px;
+    }
+    aside, .workspace {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 16px 42px rgba(20, 34, 48, 0.08);
+    }
+    aside {
+      align-self: start;
+      padding: 14px;
+      position: sticky;
+      top: 16px;
+    }
+    .tabs { display: grid; gap: 8px; }
+    button, .file-label {
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      font: inherit;
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 12px;
+    }
+    .tab {
+      justify-content: flex-start;
+      width: 100%;
+      border-color: transparent;
+      background: transparent;
+      text-align: left;
+    }
+    .tab.active {
+      background: #e8f3f1;
+      border-color: #b9d8d3;
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+    .primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+    .danger { border-color: #f3b7b2; color: var(--danger); }
+    .file-actions, .panel-actions, .row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .file-actions {
+      border-top: 1px solid var(--line);
+      margin-top: 14px;
+      padding-top: 14px;
+    }
+    input[type="file"] { display: none; }
+    .workspace { min-width: 0; padding: clamp(16px, 2vw, 26px); }
+    .section-head {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .section-head p, .status, .hint { color: var(--muted); margin: 6px 0 0; }
+    .status {
+      border-top: 1px solid var(--line);
+      font-size: 14px;
+      margin-top: 14px;
+      padding-top: 12px;
+    }
+    form {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin-bottom: 22px;
+      padding: 18px;
+    }
+    .form-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .full { grid-column: 1 / -1; }
+    label {
+      color: #344054;
+      display: grid;
+      font-size: 14px;
+      font-weight: 700;
+      gap: 6px;
+    }
+    input, textarea, select {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--text);
+      font: inherit;
+      min-height: 40px;
+      padding: 8px 10px;
+      width: 100%;
+    }
+    textarea { min-height: 88px; resize: vertical; }
+    .table-wrap { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 12px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { color: #344054; font-size: 13px; white-space: nowrap; }
+    td { min-width: 120px; }
+    .empty {
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      padding: 22px;
+      text-align: center;
+    }
+    .preview {
+      background: #0b1220;
+      border-radius: 8px;
+      color: #e6edf7;
+      display: none;
+      font-family: Consolas, "Courier New", monospace;
+      margin-top: 16px;
+      max-height: 360px;
+      overflow: auto;
+      padding: 16px;
+      white-space: pre-wrap;
+    }
+    @media (max-width: 820px) {
+      main { grid-template-columns: 1fr; }
+      aside { position: static; }
+      .form-grid { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .panel-actions { margin-top: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Academic Website Maintenance Panel</h1>
+    <p>维护论文、奖项、项目、教育经历和个人简介。当前页面会先读取 <code>/data/content.json</code> 作为基础数据库。</p>
+  </header>
+
+  <main>
+    <aside>
+      <nav class="tabs" aria-label="Sections">
+        <button class="tab active" data-section="publications">论文 Publications</button>
+        <button class="tab" data-section="awards">奖项 Awards</button>
+        <button class="tab" data-section="projects">项目 Projects</button>
+        <button class="tab" data-section="services">服务 Services</button>
+        <button class="tab" data-section="education">教育 Education</button>
+        <button class="tab" data-section="researchAreas">研究方向</button>
+        <button class="tab" data-section="news">动态 News</button>
+        <button class="tab" data-section="profile">个人简介</button>
+      </nav>
+      <div class="file-actions">
+        <label class="file-label" for="import-file">导入 JSON</label>
+        <input id="import-file" type="file" accept="application/json,.json">
+        <button id="download-section" class="primary" type="button">导出当前</button>
+        <button id="download-all" type="button">导出全部</button>
+      </div>
+      <p id="status" class="status">正在读取网站数据库...</p>
+    </aside>
+
+    <section class="workspace">
+      <div class="section-head">
+        <div>
+          <h2 id="section-title">论文 Publications</h2>
+          <p id="section-desc">维护论文题目、作者、期刊/会议、年份和链接。</p>
+        </div>
+        <div class="panel-actions">
+          <button id="new-item" class="primary" type="button">新增</button>
+          <button id="preview-json" type="button">预览 JSON</button>
+        </div>
+      </div>
+      <form id="editor-form" autocomplete="off"></form>
+      <div id="list"></div>
+      <pre id="preview" class="preview"></pre>
+    </section>
+  </main>
+
+  <script>
+    const schemas = {
+      publications: {
+        title: "论文 Publications",
+        desc: "维护论文题目、作者、期刊/会议、年份、主题和链接。",
+        fields: [["title","题目","textarea"],["authors","作者","text"],["venue","期刊 / 会议","text"],["year","年份","number"],["themes","主题","text"],["status","状态","select",["Published","Accepted","Under review","Preprint"]],["link","链接","url"]],
+        columns: ["year","title","venue","status"]
+      },
+      awards: {
+        title: "奖项 Awards",
+        desc: "维护奖项名称、颁发机构或说明，以及获奖时间。",
+        fields: [["name","奖项名称","textarea"],["grantor","颁发机构 / 说明","textarea"],["time","时间","text"]],
+        columns: ["time","name","grantor"]
+      },
+      projects: {
+        title: "项目 Projects",
+        desc: "维护项目名称、时间和承担内容。",
+        fields: [["title","项目名称","textarea"],["time","时间","text"],["description","说明","textarea"]],
+        columns: ["time","title","description"]
+      },
+      services: {
+        title: "服务 Services",
+        desc: "维护学术服务、任职和组织信息。",
+        fields: [["role","角色","text"],["organization","组织","text"],["time","时间","text"]],
+        columns: ["time","role","organization"]
+      },
+      education: {
+        title: "教育 Education",
+        desc: "维护学校、学位、导师和时间。",
+        fields: [["school","学校","textarea"],["degree","学位","text"],["supervisor","导师","text"],["time","时间","text"]],
+        columns: ["time","school","degree"]
+      },
+      researchAreas: {
+        title: "研究方向 Research Areas",
+        desc: "维护首页展示的研究方向。",
+        fields: [["title","方向名称","textarea"],["description","说明","textarea"]],
+        columns: ["title","description"]
+      },
+      news: {
+        title: "动态 News",
+        desc: "维护后续网站动态、论文接收、报告、任职和项目更新。",
+        fields: [["date","日期","date"],["title","标题","text"],["category","类别","select",["Publication","Award","Talk","Project","Service","Other"]],["description","说明","textarea"],["url","链接","url"]],
+        columns: ["date","title","category"]
+      },
+      profile: {
+        title: "个人简介 Profile",
+        desc: "维护姓名、单位、邮箱、简介等基础信息。",
+        object: true,
+        fields: [["name","姓名","text"],["title","身份 / 职位","text"],["affiliation","单位","textarea"],["email","邮箱","email"],["location","地点","text"],["github","GitHub","url"],["summary","首页摘要","textarea"],["bio","详细简介","textarea"]],
+        columns: ["name","title","affiliation"]
+      }
+    };
+
+    const emptyData = { profile: {}, researchAreas: [], education: [], publications: [], services: [], projects: [], awards: [], news: [] };
+    let data = structuredClone(emptyData);
+    let activeSection = "publications";
+    let activeIndex = -1;
+
+    const form = document.querySelector("#editor-form");
+    const list = document.querySelector("#list");
+    const statusEl = document.querySelector("#status");
+    const preview = document.querySelector("#preview");
+
+    document.querySelectorAll(".tab").forEach((button) => {
+      button.addEventListener("click", () => {
+        activeSection = button.dataset.section;
+        activeIndex = -1;
+        document.querySelectorAll(".tab").forEach((tab) => tab.classList.toggle("active", tab === button));
+        render();
+      });
+    });
+
+    document.querySelector("#new-item").addEventListener("click", () => {
+      activeIndex = -1;
+      renderForm();
+      form.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    document.querySelector("#preview-json").addEventListener("click", () => {
+      preview.style.display = preview.style.display === "block" ? "none" : "block";
+      preview.textContent = JSON.stringify(currentPayload(), null, 2);
+    });
+
+    document.querySelector("#download-section").addEventListener("click", () => {
+      downloadJson(`${activeSection}.json`, currentPayload());
+      setStatus(`已导出 ${activeSection}.json。`);
+    });
+
+    document.querySelector("#download-all").addEventListener("click", () => {
+      downloadJson("content.json", data);
+      setStatus("已导出完整数据库 content.json。");
+    });
+
+    document.querySelector("#import-file").addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        const imported = JSON.parse(await file.text());
+        if (Array.isArray(imported)) {
+          data[activeSection] = imported;
+        } else if (schemas[activeSection].object && !Object.keys(emptyData).some((key) => key in imported)) {
+          data[activeSection] = imported;
+        } else {
+          data = { ...structuredClone(emptyData), ...data, ...imported };
+        }
+        persist();
+        activeIndex = -1;
+        render();
+        setStatus(`已导入 ${file.name}。`);
+      } catch (error) {
+        setStatus("导入失败：JSON 格式不正确。");
+      } finally {
+        event.target.value = "";
+      }
+    });
+
+    async function init() {
+      const cached = loadCached();
+      if (cached) {
+        data = cached;
+        setStatus("已载入浏览器中的草稿数据。");
+        render();
+        return;
+      }
+      try {
+        const response = await fetch("/data/content.json", { cache: "no-store" });
+        if (!response.ok) throw new Error("Cannot load data");
+        data = { ...structuredClone(emptyData), ...(await response.json()) };
+        persist();
+        setStatus("已载入当前网站基础数据库。");
+      } catch (error) {
+        setStatus("未能读取 /data/content.json，已使用空数据库。");
+      }
+      render();
+    }
+
+    function render() {
+      const schema = schemas[activeSection];
+      document.querySelector("#section-title").textContent = schema.title;
+      document.querySelector("#section-desc").textContent = schema.desc;
+      document.querySelector("#new-item").style.display = schema.object ? "none" : "inline-flex";
+      preview.style.display = "none";
+      renderForm();
+      renderList();
+    }
+
+    function renderForm() {
+      const schema = schemas[activeSection];
+      const payload = schema.object ? data[activeSection] || {} : (activeIndex >= 0 ? data[activeSection][activeIndex] : {});
+      form.innerHTML = `
+        <div class="form-grid">
+          ${schema.fields.map(([key, label, type, options]) => renderField(key, label, type, options, payload[key] || "")).join("")}
+        </div>
+        <div class="panel-actions" style="margin-top:16px">
+          <button class="primary" type="submit">${schema.object ? "保存" : activeIndex >= 0 ? "更新" : "添加"}</button>
+          ${schema.object ? "" : '<button type="button" id="clear-form">清空</button>'}
+        </div>`;
+      form.onsubmit = (event) => {
+        event.preventDefault();
+        const nextItem = {};
+        schema.fields.forEach(([key]) => { nextItem[key] = form.elements[key].value.trim(); });
+        const primaryKey = schema.fields[0][0];
+        if (!nextItem[primaryKey]) {
+          setStatus("请填写第一项必填内容。");
+          return;
+        }
+        if (schema.object) data[activeSection] = nextItem;
+        else if (activeIndex >= 0) data[activeSection][activeIndex] = nextItem;
+        else data[activeSection].unshift(nextItem);
+        sortData(activeSection);
+        persist();
+        activeIndex = -1;
+        render();
+        setStatus("内容已保存到浏览器草稿。导出 content.json 后即可提交到 GitHub。");
+      };
+      const clear = document.querySelector("#clear-form");
+      if (clear) clear.onclick = () => { activeIndex = -1; renderForm(); };
+    }
+
+    function renderField(key, label, type, options, value) {
+      const full = type === "textarea" || key === "title" || key === "name" ? " full" : "";
+      if (type === "textarea") return `<label class="${full}">${label}<textarea name="${key}">${escapeHtml(value)}</textarea></label>`;
+      if (type === "select") {
+        return `<label class="${full}">${label}<select name="${key}"><option value=""></option>${options.map((option) => `<option value="${escapeHtml(option)}" ${option === value ? "selected" : ""}>${escapeHtml(option)}</option>`).join("")}</select></label>`;
+      }
+      return `<label class="${full}">${label}<input name="${key}" type="${type}" value="${escapeHtml(value)}"></label>`;
+    }
+
+    function renderList() {
+      const schema = schemas[activeSection];
+      if (schema.object) {
+        const row = data[activeSection] || {};
+        list.innerHTML = `<div class="table-wrap"><table><tbody>${schema.fields.map(([key, label]) => `<tr><th>${label}</th><td>${escapeHtml(row[key] || "")}</td></tr>`).join("")}</tbody></table></div>`;
+        return;
+      }
+      const rows = data[activeSection] || [];
+      if (!rows.length) {
+        list.innerHTML = '<div class="empty">暂无内容。点击“新增”开始维护。</div>';
+        return;
+      }
+      list.innerHTML = `<div class="table-wrap"><table><thead><tr>${schema.columns.map((column) => `<th>${fieldLabel(schema, column)}</th>`).join("")}<th>操作</th></tr></thead><tbody>${rows.map((row, index) => `<tr>${schema.columns.map((column) => `<td>${escapeHtml(row[column] || "")}</td>`).join("")}<td><div class="row-actions"><button type="button" data-edit="${index}">编辑</button><button type="button" class="danger" data-delete="${index}">删除</button></div></td></tr>`).join("")}</tbody></table></div>`;
+      list.querySelectorAll("[data-edit]").forEach((button) => {
+        button.addEventListener("click", () => {
+          activeIndex = Number(button.dataset.edit);
+          renderForm();
+          form.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+      list.querySelectorAll("[data-delete]").forEach((button) => {
+        button.addEventListener("click", () => {
+          data[activeSection].splice(Number(button.dataset.delete), 1);
+          persist();
+          render();
+          setStatus("内容已删除。");
+        });
+      });
+    }
+
+    function currentPayload() { return data[activeSection]; }
+    function fieldLabel(schema, key) { return (schema.fields.find(([fieldKey]) => fieldKey === key) || [key, key])[1]; }
+    function sortData(section) {
+      if (!Array.isArray(data[section])) return;
+      const key = section === "news" ? "date" : section === "publications" ? "year" : "time";
+      data[section].sort((a, b) => String(b[key] || "").localeCompare(String(a[key] || "")));
+    }
+    function persist() { localStorage.setItem("academicSiteContent", JSON.stringify(data)); }
+    function loadCached() {
+      try { return JSON.parse(localStorage.getItem("academicSiteContent")); }
+      catch (error) { return null; }
+    }
+    function downloadJson(filename, payload) {
+      const blob = new Blob([JSON.stringify(payload, null, 2) + "\n"], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+    function escapeHtml(value) {
+      return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+    }
+    function setStatus(message) { statusEl.textContent = message; }
+    init();
+  </script>
+</body>
+</html>

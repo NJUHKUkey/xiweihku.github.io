@@ -1,0 +1,220 @@
+{
+  "profile": {
+    "name": "Xi Wei",
+    "title": "PhD Candidate in Urban Planning",
+    "affiliation": "Department of Urban Planning and Design, The University of Hong Kong",
+    "email": "weixi1998@connect.hku.hk",
+    "location": "Hong Kong SAR, China",
+    "github": "https://github.com/xiweihku",
+    "summary": "PhD Candidate in Urban Planning at The University of Hong Kong, studying intercity mobility, activity spaces, accessibility, and climate-adaptive community life circles.",
+    "bio": "Xi Wei is a PhD candidate in the Department of Urban Planning and Design at The University of Hong Kong. He received his master's degree in Urban Planning from Nanjing University in June 2024 and his bachelor's degree in Urban and Rural Planning from Nanjing University in June 2021. His research focuses on intercity mobility, X-minute cities, activity spaces, accessibility, and urban spatial restructuring."
+  },
+  "researchAreas": [
+    {
+      "title": "Intercity mobility and regional integration",
+      "description": "Understanding how daily cross-city movements reshape activity spaces, commuting systems, and regional urban networks."
+    },
+    {
+      "title": "Accessibility, activity space, and social equity",
+      "description": "Measuring how people actually reach urban opportunities across neighborhoods, facilities, and transport environments."
+    },
+    {
+      "title": "X-minute cities and climate-adaptive communities",
+      "description": "Evaluating community life circles, effective accessibility, and service provision under changing environmental conditions."
+    }
+  ],
+  "education": [
+    {
+      "school": "The University of Hong Kong, Hong Kong SAR, China",
+      "degree": "Ph.D. in Urban Planning",
+      "supervisor": "Supervisor: Prof. Jiangping Zhou",
+      "time": "Sep. 2024 - present"
+    },
+    {
+      "school": "Nanjing University, Nanjing, China",
+      "degree": "M.Eng. in Urban Planning",
+      "supervisor": "Supervisor: Prof. Feng Zhen",
+      "time": "Sep. 2021 - Jun. 2024"
+    },
+    {
+      "school": "Nanjing University, Nanjing, China",
+      "degree": "B.Eng. in Urban and Rural Planning",
+      "supervisor": "Supervisor: Prof. Guangliang Xi",
+      "time": "Sep. 2016 - Jun. 2021"
+    }
+  ],
+  "publications": [
+    {
+      "title": "Measuring food accessibility using walkability-integrated gaussian two-step floating catchment area method: A case study of Nanjing, China",
+      "link": "https://www.sciencedirect.com/science/article/pii/S0966692326000840",
+      "authors": "Yu Kong, Xi Wei*, Feng Zhen, Shanqi Zhang",
+      "venue": "Journal of Transport Geography",
+      "year": "2026",
+      "themes": "Accessibility; Street view",
+      "status": "Published"
+    },
+    {
+      "title": "The impact of inter-city railway connections on urban expansion: a heterogeneous perspective based on types and regional structures",
+      "link": "https://www.nature.com/articles/s44333-025-00053-5",
+      "authors": "Xi Wei, Feng Zhen*",
+      "venue": "npj Sustainable Mobility and Transport",
+      "year": "2025",
+      "themes": "Inter-city Travel; Urban development",
+      "status": "Published"
+    },
+    {
+      "title": "多层级公共服务设施对北京市住房租金的空间异质性影响",
+      "link": "https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeTRWA2pShBpCME6qLSNSqaN6yFrY8YzzYjEdzWMKBicqxDYy5SeBy7eJj6uC5PQpnEaQJcYXJFpQ1xTfTT78NWCZQULF8hrVgC0O8vHV8jM_l6aHBiPn4nVWgf5GgJNdduCxOW1JKGyo0MUhKZX-0Sk4ozqVDyw7-eHN1pNjNprnQ==&uniplatform=NZKPT&language=CHS",
+      "authors": "申犁帆, 龙雨, 魏玺*, 杨红",
+      "venue": "中国土地科学",
+      "year": "2025",
+      "themes": "Housing Price",
+      "status": "Published"
+    },
+    {
+      "title": "江苏省数字经济高质量发展的空间格局及影响要素",
+      "link": "https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeQFtOqv8EE2kRZQaJ8sze-BjB7Y6lbB8LoaZvvGpfTFktGTTeQUVSfOOiNnURvDpqDA-ArjUUzlxpJyFMvPlxNlrJnYMjsz1ToxfoDBDA17O1mhEalz4r-5Nd9_o-opEhDqoRuC2nCawULXwjycmn30atob66uUfeM=&uniplatform=NZKPT",
+      "authors": "姚冲, 甄峰*, 席广亮, 魏玺, 肖徐玏",
+      "venue": "资源科学",
+      "year": "2025",
+      "themes": "ICT; Urban development",
+      "status": "Published"
+    },
+    {
+      "title": "西方平台城市主义的兴起及对我国未来城市发展的影响",
+      "link": "https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeQWXVajNUcXapsm6nDWMAbtd9BDdYeJ2xEUys8TGPSKhUmn8JpdmCXXDAyA7TRu4bM7O8uIaJdYpd9TciPh5Kj97gbooyHmlfRRp8jMYSyehRDF5BRlfS8_eKLARZxzsqiZ1Ffw3WrUfHa__A5XELLeHgZZROV57-Y=&uniplatform=NZKPT",
+      "authors": "孔宇, 甄峰*, 张姗琪, 魏玺",
+      "venue": "国际城市规划",
+      "year": "2025",
+      "themes": "Platform Urbanism",
+      "status": "Published"
+    },
+    {
+      "title": "南京都市圈跨市日常人口流动影响因素及其空间效应研究",
+      "link": "https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeQNZwxz-mR7fppOwzCzXprYtbfYA1-YzgkAsuAjzK24-AFafK9Y3WE1JtpnWT7AHVX7Td03jfYXtj0n9_ESuuln39KXkf0OT7EUvydlPnEthr4wjExZQiQ8XGk3rrzIyuC7JO40vuH0qAs5VH3FlNT8RAdhZ3AVW-Q=&uniplatform=NZKPT",
+      "authors": "魏玺, 甄峰*, 席广亮, 肖徐玏",
+      "venue": "现代城市研究",
+      "year": "2024",
+      "themes": "Inter-city Travel; Travel behavior mechanism",
+      "status": "Published"
+    },
+    {
+      "title": "南京都市圈居民非通勤出行特征及其影响因素研究",
+      "link": "https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeToDRz6ylcqMAr7re_HtdORz51quy0_6XzYJVgZMAQ9JiW6H2u6h9YGnZufpmWsfjAxdfghVYXDMj7JiTRnpA1cwuWR6Udr5rHNzP9MXPmJ9uQ1fcjhg_sPwrDqT1gspQ9W-YONbAiNnKqUzEVnch5g_uv4ERr-csU=&uniplatform=NZKPT",
+      "authors": "魏玺, 甄峰*, 席广亮",
+      "venue": "地理科学",
+      "year": "2023",
+      "themes": "Inter-city Travel; Travel behavior mechanism",
+      "status": "Published"
+    },
+    {
+      "title": "社区智慧治理技术框架构建研究",
+      "link": "https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeQrdFFoqEBf7dwUO3c4BzrVOri7ex8Aq7VvFJPF-kpSgbTFblxb-ioJv_fjjmog_yj6jG-VvAL9Y-aDfy3X8fdNUhjI1aPSZ9SiWLutu5LiC1BZdeU7mkD78ff7zI8XPMSKCe2wq6bv8jerq65ThUvnfAET58ATTxg=&uniplatform=NZKPT",
+      "authors": "魏玺, 甄峰*, 孔宇",
+      "venue": "规划师",
+      "year": "2023",
+      "themes": "ICT; Community Governance",
+      "status": "Published"
+    },
+    {
+      "title": "城市新市民就业空间分异及其影响因素——以江苏省常熟市为例",
+      "link": "https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeQV1fJPZJQ3E5H7n62Ihxjh51a4G70jJL5a6ejCPvDBpw19bgqJzlJTeKzxB9tcpUhw9yq6jrttvi7KTmYoZAhg5J2LOYs6UVbfOYsEw86Py8wO7s5YdHLnFE7Gla-FhjGqValmAXcApGwWcg4b3fxIC6LyUGPUIgE=&uniplatform=NZKPT",
+      "authors": "肖徐玏, 甄峰*, 秦萧, 李智轩, 魏玺",
+      "venue": "经济地理",
+      "year": "2023",
+      "themes": "New-type urbanization; Employment Distribution",
+      "status": "Published"
+    },
+    {
+      "title": "商业体系与实际服务人口流动性耦合关系研究——以南京都市圈为例",
+      "link": "https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeTu4mnGYKuf1Ttq9ASJM7zWKBTO-1bFIcIIpjtV4Ocxijjjl69qvrrQX0TI_iW4IRdnEw2jmFHM949DQdS5HUSf93yOYgA3Kgt00cgAaLpSnmI2C2LDBRXoxRCdFRfG2MFy7T559ol-2qhWjB5Rb9mDZ0z46bkWKp0=&uniplatform=NZKPT",
+      "authors": "魏玺, 席广亮*, 甄峰",
+      "venue": "经济地理",
+      "year": "2022",
+      "themes": "Inter-city Travel; Urban Development",
+      "status": "Published"
+    }
+  ],
+  "services": [
+    {
+      "role": "Student Fellow",
+      "organization": "HKU Institute of Transport Studies",
+      "time": "since 2024"
+    }
+  ],
+  "projects": [
+    {
+      "title": "The Plan for the Development of Commercial Facility, Xuzhou",
+      "time": "Oct. 2022 - Oct. 2023",
+      "description": "Allocated to summarize the current issues, and plan for city-level commercial centers and sub-city-level commercial centers."
+    },
+    {
+      "title": "The Plan for the Development of Industry in Xincheng Town, Yizheng",
+      "time": "Jan. 2022 - Nov. 2022",
+      "description": "Allocated to summarize the current development status and issues."
+    },
+    {
+      "title": "The Master Plan for the Construction of Beautiful Lianyungang, Lianyungang",
+      "time": "Apr. 2021 - Nov. 2022",
+      "description": "Allocated to summarize the current development status and issues, and plan for culture and tourism development."
+    },
+    {
+      "title": "The Construction of Dynamic Perception Model for Urban Physical Examination, Changzhou",
+      "time": "Jun. 2021 - Sep. 2022",
+      "description": "Allocated to build and calculate an indicator system. Specifically responsible for modules such as urban resilience assessment, smart city construction assessment, and ecological environment protection assessment."
+    },
+    {
+      "title": "The Plan for Regional Collaboration and Industrial Development in Longshan Town, Yizheng",
+      "time": "Nov. 2021 - Jun. 2022",
+      "description": "Allocated to summarize the current development status and issues, and develop regional integration development strategies."
+    },
+    {
+      "title": "The 14th Five Year Plan for the Development of Food Industry, Yancheng",
+      "time": "Apr. 2021 - Jun. 2022",
+      "description": "Allocated to summarize the current development status and issues, and plan the spatial layout of the food industry."
+    },
+    {
+      "title": "The Construction of Intelligent Brain Platform, Changshu",
+      "time": "Nov. 2020 - Nov. 2021",
+      "description": "Allocated to complete the content of population diagnosis, including four parts: population basic information management, population spatial distribution analysis, population mobility characteristics analysis, and special group management."
+    },
+    {
+      "title": "The 14th Five Year Plan in Dafeng District, Yancheng",
+      "time": "Nov. 2020 - Jan. 2021",
+      "description": "Allocated to complete the framework and content of the social governance section."
+    }
+  ],
+  "awards": [
+    {
+      "name": "National Scholarship for Postgraduates",
+      "grantor": "Ministry of Education, China",
+      "time": "2022, 2023"
+    },
+    {
+      "name": "Excellent Postgraduates Pacesetter",
+      "grantor": "Nanjing University, China",
+      "time": "2022"
+    },
+    {
+      "name": "Scholarship of Academic Excellence for Postgraduates, First Level",
+      "grantor": "Nanjing University, China",
+      "time": "2021, 2022, 2023"
+    },
+    {
+      "name": "The 12th YuanYe Awards Competition, Third Prize",
+      "grantor": "Topic: The commercial spatial pattern in Nanjing metropolitan area from the perspective of mobility",
+      "time": "2021"
+    },
+    {
+      "name": "The 6th Planning Decision Support Model Design Contest - Chengyuan Cup, Excellence Prize",
+      "grantor": "Topic: Evaluation and prediction model of neighborhood service facilities from the perspective of online-offline integration",
+      "time": "2022"
+    },
+    {
+      "name": "The 6th Planning Decision Support Model Design Contest - Chengyuan Cup, Second Prize",
+      "grantor": "Topic: Identification and characteristics of cross border areas in Nanjing metropolitan area from the perspective of pedestrian flow network",
+      "time": "2022"
+    }
+  ],
+  "news": []
+}
