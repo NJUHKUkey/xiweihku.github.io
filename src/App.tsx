@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 
 type Author = {
   name: string
@@ -14,6 +14,16 @@ type Publication = {
   year: string
   themes: string[]
   status: string
+}
+
+type RawPublication = {
+  title?: string
+  link?: string
+  authors?: string
+  venue?: string
+  year?: string
+  themes?: string
+  status?: string
 }
 
 type Award = {
@@ -34,240 +44,77 @@ type ProjectItem = {
   description: string
 }
 
-const publications: Publication[] = [
-  {
-    title:
-      'Measuring food accessibility using walkability-integrated gaussian two-step floating catchment area method: A case study of Nanjing, China',
-    link: 'https://www.sciencedirect.com/science/article/pii/S0966692326000840',
-    authors: [
-      { name: 'Yu Kong', highlight: false, corresponding: false },
-      { name: 'Xi Wei', highlight: true, corresponding: true },
-      { name: 'Feng Zhen', highlight: false, corresponding: false },
-      { name: 'Shanqi Zhang', highlight: false, corresponding: false },
-    ],
-    venue: 'Journal of Transport Geography',
-    year: '2026',
-    themes: ['Accessibility', 'Street view'],
-    status: 'Published',
-  },
-  {
-    title:
-      'The impact of inter-city railway connections on urban expansion: a heterogeneous perspective based on types and regional structures',
-    link: 'https://www.nature.com/articles/s44333-025-00053-5',
-    authors: [
-      { name: 'Xi Wei', highlight: true, corresponding: false },
-      { name: 'Feng Zhen', highlight: false, corresponding: true },
-    ],
-    venue: 'npj Sustainable Mobility and Transport',
-    year: '2025',
-    themes: ['Inter-city Travel', 'Urban development'],
-    status: 'Published',
-  },
-  {
-    title: '多层级公共服务设施对北京市住房租金的空间异质性影响',
-    link: 'https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeTRWA2pShBpCME6qLSNSqaN6yFrY8YzzYjEdzWMKBicqxDYy5SeBy7eJj6uC5PQpnEaQJcYXJFpQ1xTfTT78NWCZQULF8hrVgC0O8vHV8jM_l6aHBiPn4nVWgf5GgJNdduCxOW1JKGyo0MUhKZX-0Sk4ozqVDyw7-eHN1pNjNprnQ==&uniplatform=NZKPT&language=CHS',
-    authors: [
-      { name: '申犁帆', highlight: false, corresponding: false },
-      { name: '龙雨', highlight: false, corresponding: false },
-      { name: '魏玺', highlight: true, corresponding: true },
-      { name: '杨红', highlight: false, corresponding: false },
-    ],
-    venue: '中国土地科学',
-    year: '2025',
-    themes: ['Housing Price'],
-    status: 'Published',
-  },
-  {
-    title: '江苏省数字经济高质量发展的空间格局及影响要素',
-    link: 'https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeQFtOqv8EE2kRZQaJ8sze-BjB7Y6lbB8LoaZvvGpfTFktGTTeQUVSfOOiNnURvDpqDA-ArjUUzlxpJyFMvPlxNlrJnYMjsz1ToxfoDBDA17O1mhEalz4r-5Nd9_o-opEhDqoRuC2nCawULXwjycmn30atob66uUfeM=&uniplatform=NZKPT',
-    authors: [
-      { name: '姚冲', highlight: false, corresponding: false },
-      { name: '甄峰', highlight: false, corresponding: true },
-      { name: '席广亮', highlight: false, corresponding: false },
-      { name: '魏玺', highlight: true, corresponding: false },
-      { name: '肖徐玏', highlight: false, corresponding: false },
-    ],
-    venue: '资源科学',
-    year: '2025',
-    themes: ['ICT', 'Urban development'],
-    status: 'Published',
-  },
-  {
-    title: '西方平台城市主义的兴起及对我国未来城市发展的影响',
-    link: 'https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeQWXVajNUcXapsm6nDWMAbtd9BDdYeJ2xEUys8TGPSKhUmn8JpdmCXXDAyA7TRu4bM7O8uIaJdYpd9TciPh5Kj97gbooyHmlfRRp8jMYSyehRDF5BRlfS8_eKLARZxzsqiZ1Ffw3WrUfHa__A5XELLeHgZZROV57-Y=&uniplatform=NZKPT',
-    authors: [
-      { name: '孔宇', highlight: false, corresponding: false },
-      { name: '甄峰', highlight: false, corresponding: true },
-      { name: '张姗琪', highlight: false, corresponding: false },
-      { name: '魏玺', highlight: true, corresponding: false },
-    ],
-    venue: '国际城市规划',
-    year: '2025',
-    themes: ['Platform Urbanism'],
-    status: 'Published',
-  },
-  {
-    title: '南京都市圈跨市日常人口流动影响因素及其空间效应研究',
-    link: 'https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeQNZwxz-mR7fppOwzCzXprYtbfYA1-YzgkAsuAjzK24-AFafK9Y3WE1JtpnWT7AHVX7Td03jfYXtj0n9_ESuuln39KXkf0OT7EUvydlPnEthr4wjExZQiQ8XGk3rrzIyuC7JO40vuH0qAs5VH3FlNT8RAdhZ3AVW-Q=&uniplatform=NZKPT',
-    authors: [
-      { name: '魏玺', highlight: true, corresponding: false },
-      { name: '甄峰', highlight: false, corresponding: true },
-      { name: '席广亮', highlight: false, corresponding: false },
-      { name: '肖徐玏', highlight: false, corresponding: false },
-    ],
-    venue: '现代城市研究',
-    year: '2024',
-    themes: ['Inter-city Travel', 'Travel behavior mechanism'],
-    status: 'Published',
-  },
-  {
-    title: '南京都市圈居民非通勤出行特征及其影响因素研究',
-    link: 'https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeToDRz6ylcqMAr7re_HtdORz51quy0_6XzYJVgZMAQ9JiW6H2u6h9YGnZufpmWsfjAxdfghVYXDMj7JiTRnpA1cwuWR6Udr5rHNzP9MXPmJ9uQ1fcjhg_sPwrDqT1gspQ9W-YONbAiNnKqUzEVnch5g_uv4ERr-csU=&uniplatform=NZKPT',
-    authors: [
-      { name: '魏玺', highlight: true, corresponding: false },
-      { name: '甄峰', highlight: false, corresponding: true },
-      { name: '席广亮', highlight: false, corresponding: false },
-    ],
-    venue: '地理科学',
-    year: '2023',
-    themes: ['Inter-city Travel', 'Travel behavior mechanism'],
-    status: 'Published',
-  },
-  {
-    title: '社区智慧治理技术框架构建研究',
-    link: 'https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeQrdFFoqEBf7dwUO3c4BzrVOri7ex8Aq7VvFJPF-kpSgbTFblxb-ioJv_fjjmog_yj6jG-VvAL9Y-aDfy3X8fdNUhjI1aPSZ9SiWLutu5LiC1BZdeU7mkD78ff7zI8XPMSKCe2wq6bv8jerq65ThUvnfAET58ATTxg=&uniplatform=NZKPT',
-    authors: [
-      { name: '魏玺', highlight: true, corresponding: false },
-      { name: '甄峰', highlight: false, corresponding: true },
-      { name: '孔宇', highlight: false, corresponding: false },
-    ],
-    venue: '规划师',
-    year: '2023',
-    themes: ['ICT', 'Community Governance'],
-    status: 'Published',
-  },
-  {
-    title: '城市新市民就业空间分异及其影响因素——以江苏省常熟市为例',
-    link: 'https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeQV1fJPZJQ3E5H7n62Ihxjh51a4G70jJL5a6ejCPvDBpw19bgqJzlJTeKzxB9tcpUhw9yq6jrttvi7KTmYoZAhg5J2LOYs6UVbfOYsEw86Py8wO7s5YdHLnFE7Gla-FhjGqValmAXcApGwWcg4b3fxIC6LyUGPUIgE=&uniplatform=NZKPT',
-    authors: [
-      { name: '肖徐玏', highlight: false, corresponding: false },
-      { name: '甄峰', highlight: false, corresponding: true },
-      { name: '秦萧', highlight: false, corresponding: false },
-      { name: '李智轩', highlight: false, corresponding: false },
-      { name: '魏玺', highlight: true, corresponding: false },
-    ],
-    venue: '经济地理',
-    year: '2023',
-    themes: ['New-type urbanization', 'Employment Distribution'],
-    status: 'Published',
-  },
-  {
-    title: '商业体系与实际服务人口流动性耦合关系研究——以南京都市圈为例',
-    link: 'https://kns.cnki.net/kcms2/article/abstract?v=FCWB7knoBeTu4mnGYKuf1Ttq9ASJM7zWKBTO-1bFIcIIpjtV4Ocxijjjl69qvrrQX0TI_iW4IRdnEw2jmFHM949DQdS5HUSf93yOYgA3Kgt00cgAaLpSnmI2C2LDBRXoxRCdFRfG2MFy7T559ol-2qhWjB5Rb9mDZ0z46bkWKp0=&uniplatform=NZKPT',
-    authors: [
-      { name: '魏玺', highlight: true, corresponding: false },
-      { name: '席广亮', highlight: false, corresponding: true },
-      { name: '甄峰', highlight: false, corresponding: false },
-    ],
-    venue: '经济地理',
-    year: '2022',
-    themes: ['Inter-city Travel', 'Urban Development'],
-    status: 'Published',
-  },
-]
+type ResearchArea = {
+  title: string
+  description: string
+}
 
-const services: ServiceItem[] = [
-  {
-    role: 'Student Fellow',
-    organization: 'HKU Institute of Transport Studies',
-    time: 'since 2024',
-  },
-]
+type EducationItem = {
+  school: string
+  degree: string
+  supervisor: string
+  time: string
+}
 
-const awards: Award[] = [
-  {
-    name: 'National Scholarship for Postgraduates',
-    grantor: 'Ministry of Education, China',
-    time: '2022, 2023',
-  },
-  {
-    name: 'Excellent Postgraduates Pacesetter',
-    grantor: 'Nanjing University, China',
-    time: '2022',
-  },
-  {
-    name: 'Scholarship of Academic Excellence for Postgraduates, First Level',
-    grantor: 'Nanjing University, China',
-    time: '2021, 2022, 2023',
-  },
-  {
-    name: 'The 12th YuanYe Awards Competition, Third Prize',
-    grantor:
-      'Topic: The commercial spatial pattern in Nanjing metropolitan area from the perspective of mobility',
-    time: '2021',
-  },
-  {
-    name: 'The 6th Planning Decision Support Model Design Contest – Chengyuan Cup, Excellence Prize',
-    grantor:
-      'Topic: Evaluation and prediction model of neighborhood service facilities from the perspective of online-offline integration',
-    time: '2022',
-  },
-  {
-    name: 'The 6th Planning Decision Support Model Design Contest – Chengyuan Cup, Second Prize',
-    grantor:
-      'Topic: Identification and characteristics of cross border areas in Nanjing metropolitan area from the perspective of pedestrian flow network',
-    time: '2022',
-  },
-]
+type Profile = {
+  name: string
+  title: string
+  affiliation: string
+  email: string
+  location: string
+  github: string
+  summary: string
+  bio: string
+}
 
-const projectItems: ProjectItem[] = [
-  {
-    title: 'The Plan for the Development of Commercial Facility, Xuzhou',
-    time: 'Oct. 2022 – Oct. 2023',
-    description:
-      'Allocated to summarize the current issues, and plan for city-level commercial centers and sub-city-level commercial centers.',
+type ContentData = {
+  profile: Profile
+  researchAreas: ResearchArea[]
+  education: EducationItem[]
+  publications: RawPublication[]
+  services: ServiceItem[]
+  projects: ProjectItem[]
+  awards: Award[]
+  news: unknown[]
+}
+
+const fallbackContent: ContentData = {
+  profile: {
+    name: 'Xi Wei',
+    title: 'PhD Candidate in Urban Planning',
+    affiliation: 'Department of Urban Planning and Design, The University of Hong Kong',
+    email: 'weixi1998@connect.hku.hk',
+    location: 'Hong Kong SAR, China',
+    github: 'https://github.com/xiweihku',
+    summary:
+      'PhD Candidate in Urban Planning at The University of Hong Kong, studying intercity mobility, activity spaces, accessibility, and climate-adaptive community life circles.',
+    bio:
+      "Xi Wei is a PhD candidate in the Department of Urban Planning and Design at The University of Hong Kong. His research focuses on intercity mobility, X-minute cities, activity spaces, accessibility, and urban spatial restructuring.",
   },
-  {
-    title: 'The Plan for the Development of Industry in Xincheng Town, Yizheng',
-    time: 'Jan. 2022 – Nov. 2022',
-    description: 'Allocated to summarize the current development status and issues.',
-  },
-  {
-    title: 'The Master Plan for the Construction of Beautiful Lianyungang, Lianyungang',
-    time: 'Apr. 2021 – Nov. 2022',
-    description:
-      'Allocated to summarize the current development status and issues, and plan for culture and tourism development.',
-  },
-  {
-    title: 'The Construction of Dynamic Perception Model for Urban Physical Examination, Changzhou',
-    time: 'Jun. 2021 – Sep. 2022',
-    description:
-      'Allocated to build and calculate an indicator system. Specifically responsible for modules such as urban resilience assessment, smart city construction assessment, and ecological environment protection assessment.',
-  },
-  {
-    title: 'The Plan for Regional Collaboration and Industrial Development in Longshan Town, Yizheng',
-    time: 'Nov. 2021 – Jun. 2022',
-    description:
-      'Allocated to summarize the current development status and issues, and develop regional integration development strategies.',
-  },
-  {
-    title: 'The 14th Five Year Plan for the Development of Food Industry, Yancheng',
-    time: 'Apr. 2021 – Jun. 2022',
-    description:
-      'Allocated to summarize the current development status and issues, and plan the spatial layout of the food industry.',
-  },
-  {
-    title: 'The Construction of Intelligent Brain Platform, Changshu',
-    time: 'Nov. 2020 – Nov. 2021',
-    description:
-      'Allocated to complete the content of population diagnosis, including four parts: population basic information management, population spatial distribution analysis, population mobility characteristics analysis, and special group management.',
-  },
-  {
-    title: 'The 14th Five Year Plan in Dafeng District, Yancheng',
-    time: 'Nov. 2020 – Jan. 2021',
-    description: 'Allocated to complete the framework and content of the social governance section.',
-  },
-]
+  researchAreas: [
+    {
+      title: 'Intercity mobility and regional integration',
+      description:
+        'Understanding how daily cross-city movements reshape activity spaces, commuting systems, and regional urban networks.',
+    },
+    {
+      title: 'Accessibility, activity space, and social equity',
+      description:
+        'Measuring how people actually reach urban opportunities across neighborhoods, facilities, and transport environments.',
+    },
+    {
+      title: 'X-minute cities and climate-adaptive communities',
+      description:
+        'Evaluating community life circles, effective accessibility, and service provision under changing environmental conditions.',
+    },
+  ],
+  education: [],
+  publications: [],
+  services: [],
+  projects: [],
+  awards: [],
+  news: [],
+}
 
 const navItems = [
   { href: '#about', label: 'About' },
@@ -276,47 +123,39 @@ const navItems = [
   { href: '#awards', label: 'Honors & Awards' },
 ]
 
-const researchAreas = [
-  {
-    title: 'Intercity mobility and regional integration',
-    description:
-      'Understanding how daily cross-city movements reshape activity spaces, commuting systems, and regional urban networks.',
-  },
-  {
-    title: 'Accessibility, activity space, and social equity',
-    description:
-      'Measuring how people actually reach urban opportunities across neighborhoods, facilities, and transport environments.',
-  },
-  {
-    title: 'X-minute cities and climate-adaptive communities',
-    description:
-      'Evaluating community life circles, effective accessibility, and service provision under changing environmental conditions.',
-  },
-]
+function splitList(value?: string) {
+  return String(value || '')
+    .split(/[;,]/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+}
 
-const educationItems = [
-  {
-    school: 'The University of Hong Kong, Hong Kong SAR, China',
-    degree: 'Ph.D. in Urban Planning',
-    supervisor: 'Supervisor: Prof. Jiangping Zhou',
-    time: 'Sep. 2024 – present',
-  },
-  {
-    school: 'Nanjing University, Nanjing, China',
-    degree: 'M.Eng. in Urban Planning',
-    supervisor: 'Supervisor: Prof. Feng Zhen',
-    time: 'Sep. 2021 – Jun. 2024',
-  },
-  {
-    school: 'Nanjing University, Nanjing, China',
-    degree: 'B.Eng. in Urban and Rural Planning',
-    supervisor: 'Supervisor: Prof. Guangliang Xi',
-    time: 'Sep. 2016 – Jun. 2021',
-  },
-]
+function parseAuthors(value?: string): Author[] {
+  return splitList(value).map((entry) => {
+    const corresponding = entry.includes('*')
+    const name = entry.replace(/\*/g, '').trim()
+    return {
+      name,
+      highlight: ['Xi Wei', 'Wei Xi', '魏玺'].includes(name),
+      corresponding,
+    }
+  })
+}
+
+function normalizePublication(pub: RawPublication): Publication {
+  return {
+    title: pub.title || 'Untitled publication',
+    link: pub.link || '#',
+    authors: parseAuthors(pub.authors),
+    venue: pub.venue || '',
+    year: pub.year || '',
+    themes: splitList(pub.themes),
+    status: pub.status || 'Published',
+  }
+}
 
 function uniqueSortedYears(items: Publication[]) {
-  return ['All', ...Array.from(new Set(items.map((p) => p.year))).sort((a, b) => Number(b) - Number(a))]
+  return ['All', ...Array.from(new Set(items.map((p) => p.year).filter(Boolean))).sort((a, b) => Number(b) - Number(a))]
 }
 
 function uniqueThemes(items: Publication[]) {
@@ -329,6 +168,40 @@ function filterPublications(items: Publication[], selectedYear: string, selected
     const matchTheme = selectedTheme === 'All' || pub.themes.includes(selectedTheme)
     return matchYear && matchTheme
   })
+}
+
+function useSiteContent() {
+  const [content, setContent] = useState<ContentData>(fallbackContent)
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadContent() {
+      try {
+        const response = await fetch('/data/content.json', { cache: 'no-store' })
+        if (!response.ok) {
+          throw new Error(`Failed to load content: ${response.status}`)
+        }
+        const nextContent = (await response.json()) as ContentData
+        if (!cancelled) {
+          setContent({
+            ...fallbackContent,
+            ...nextContent,
+            profile: { ...fallbackContent.profile, ...nextContent.profile },
+          })
+        }
+      } catch (error) {
+        console.warn(error)
+      }
+    }
+
+    loadContent()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  return content
 }
 
 function AuthorList({ authors }: { authors: Author[] }) {
@@ -382,7 +255,7 @@ function StatCard({ value, label }: { value: string; label: string }) {
   )
 }
 
-function HeroSection() {
+function HeroSection({ profile, publicationCount, researchCount }: { profile: Profile; publicationCount: number; researchCount: number }) {
   return (
     <section id="about" className="relative overflow-hidden border-b border-slate-200 bg-[radial-gradient(circle_at_top_left,_#dbeafe,_transparent_34%),linear-gradient(135deg,_#f8fafc_0%,_#eef2f7_100%)]">
       <div className="absolute right-[-8rem] top-[-8rem] h-80 w-80 rounded-full bg-[#8B1E3F]/10 blur-3xl" />
@@ -391,26 +264,24 @@ function HeroSection() {
       <div className="relative mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-[1.08fr_0.92fr] md:items-center md:py-24">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#8B1E3F]">Academic Website</p>
-          <h1 className="mt-5 text-5xl font-semibold tracking-tight text-slate-950 md:text-7xl">Xi Wei</h1>
-          <p className="mt-5 max-w-2xl text-xl leading-9 text-slate-700">
-            PhD Candidate in Urban Planning at The University of Hong Kong, studying intercity mobility, activity spaces, accessibility, and climate-adaptive community life circles.
-          </p>
+          <h1 className="mt-5 text-5xl font-semibold tracking-tight text-slate-950 md:text-7xl">{profile.name}</h1>
+          <p className="mt-5 max-w-2xl text-xl leading-9 text-slate-700">{profile.summary}</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <LinkButton href="mailto:weixi1998@connect.hku.hk" variant="primary">Email</LinkButton>
-            <LinkButton href="https://github.com/xiweihku">GitHub</LinkButton>
+            <LinkButton href={`mailto:${profile.email}`} variant="primary">Email</LinkButton>
+            <LinkButton href={profile.github}>GitHub</LinkButton>
             <LinkButton href="#publications">Publications</LinkButton>
           </div>
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            <StatCard value={`${publications.length}+`} label="Publications and research outputs" />
+            <StatCard value={`${publicationCount}+`} label="Publications and research outputs" />
             <StatCard value="HKU" label="Department of Urban Planning and Design" />
-            <StatCard value="2" label="Core research themes" />
+            <StatCard value={`${researchCount}`} label="Core research themes" />
           </div>
         </div>
 
         <div className="rounded-[2rem] border border-white/70 bg-white/80 p-6 shadow-2xl shadow-slate-200/70 backdrop-blur">
           <img
             src="/photo.jpg"
-            alt="Xi Wei"
+            alt={profile.name}
             className="aspect-[4/5] w-full rounded-[1.5rem] object-cover object-center shadow-sm"
           />
           <div className="mt-6 rounded-3xl bg-slate-950 p-6 text-white">
@@ -423,7 +294,7 @@ function HeroSection() {
   )
 }
 
-function AboutDetails() {
+function AboutDetails({ profile, researchAreas, education }: { profile: Profile; researchAreas: ResearchArea[]; education: EducationItem[] }) {
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
       <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
@@ -435,12 +306,7 @@ function AboutDetails() {
           />
         </div>
         <div className="space-y-5 text-base leading-8 text-slate-700">
-          <p>
-            Xi Wei is a PhD candidate in the Department of Urban Planning and Design at The University of Hong Kong. He received his master's degree in Urban Planning from Nanjing University in June 2024 and his bachelor's degree in Urban and Rural Planning from Nanjing University in June 2021.
-          </p>
-          <p>
-            His research focuses on intercity mobility, X-minute cities, activity spaces, accessibility, and urban spatial restructuring. By combining mobile phone data, geospatial analytics, and urban planning theory, his work aims to inform more inclusive, efficient, and climate-resilient urban and regional planning.
-          </p>
+          <p>{profile.bio}</p>
         </div>
       </div>
 
@@ -458,7 +324,7 @@ function AboutDetails() {
         <section>
           <h3 className="border-b border-slate-200 pb-4 text-2xl font-semibold tracking-tight text-slate-950">Education</h3>
           <div className="mt-5 space-y-4">
-            {educationItems.map((edu) => (
+            {education.map((edu) => (
               <div key={`${edu.school}-${edu.degree}`} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                 <p className="text-lg font-semibold text-slate-950">{edu.school}</p>
                 <p className="mt-2 text-sm leading-7 text-slate-600">{edu.degree}</p>
@@ -473,11 +339,11 @@ function AboutDetails() {
           <h3 className="border-b border-slate-200 pb-4 text-2xl font-semibold tracking-tight text-slate-950">Contact</h3>
           <div className="mt-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#8B1E3F]">Email</p>
-            <a className="mt-3 block text-base font-medium text-slate-950 underline decoration-slate-300 underline-offset-4 hover:decoration-[#1E3A5F]" href="mailto:weixi1998@connect.hku.hk">
-              weixi1998@connect.hku.hk
+            <a className="mt-3 block text-base font-medium text-slate-950 underline decoration-slate-300 underline-offset-4 hover:decoration-[#1E3A5F]" href={`mailto:${profile.email}`}>
+              {profile.email}
             </a>
             <p className="mt-6 text-sm font-semibold uppercase tracking-[0.18em] text-[#8B1E3F]">Location</p>
-            <p className="mt-3 text-base leading-7 text-slate-700">Hong Kong SAR, China</p>
+            <p className="mt-3 text-base leading-7 text-slate-700">{profile.location}</p>
           </div>
         </section>
       </div>
@@ -486,11 +352,13 @@ function AboutDetails() {
 }
 
 function PublicationsSection({
+  publications,
   selectedYear,
   setSelectedYear,
   selectedTheme,
   setSelectedTheme,
 }: {
+  publications: Publication[]
   selectedYear: string
   setSelectedYear: (value: string) => void
   selectedTheme: string
@@ -498,7 +366,7 @@ function PublicationsSection({
 }) {
   const years = uniqueSortedYears(publications)
   const themes = uniqueThemes(publications)
-  const filtered = useMemo(() => filterPublications(publications, selectedYear, selectedTheme), [selectedYear, selectedTheme])
+  const filtered = useMemo(() => filterPublications(publications, selectedYear, selectedTheme), [publications, selectedYear, selectedTheme])
 
   return (
     <section id="publications" className="border-y border-slate-200 bg-white/70">
@@ -514,7 +382,7 @@ function PublicationsSection({
             <label className="mb-2 block text-sm font-semibold text-slate-800">Filter by year</label>
             <select
               value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
+              onChange={(event) => setSelectedYear(event.target.value)}
               className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10"
             >
               {years.map((year) => (
@@ -526,7 +394,7 @@ function PublicationsSection({
             <label className="mb-2 block text-sm font-semibold text-slate-800">Filter by theme</label>
             <select
               value={selectedTheme}
-              onChange={(e) => setSelectedTheme(e.target.value)}
+              onChange={(event) => setSelectedTheme(event.target.value)}
               className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10"
             >
               {themes.map((theme) => (
@@ -550,7 +418,7 @@ function PublicationsSection({
                     {pub.title}
                   </a>
                   <AuthorList authors={pub.authors} />
-                  <p className="mt-2 text-sm text-slate-500"><span className="italic">{pub.venue}</span> · {pub.year}</p>
+                  <p className="mt-2 text-sm text-slate-500"><span className="italic">{pub.venue}</span> - {pub.year}</p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {pub.themes.map((theme) => (
                       <span key={theme} className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
@@ -571,7 +439,7 @@ function PublicationsSection({
   )
 }
 
-function ProjectsServicesSection() {
+function ProjectsServicesSection({ projects, services }: { projects: ProjectItem[]; services: ServiceItem[] }) {
   return (
     <section id="projects-services" className="mx-auto max-w-6xl px-6 py-16">
       <SectionHeader
@@ -606,7 +474,7 @@ function ProjectsServicesSection() {
         <section>
           <h3 className="border-b border-slate-200 pb-4 text-2xl font-semibold tracking-tight text-slate-950">Projects</h3>
           <div className="mt-5 space-y-4">
-            {projectItems.map((project) => (
+            {projects.map((project) => (
               <article key={project.title} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
                 <p className="text-lg font-semibold leading-7 text-slate-950">{project.title}</p>
                 <p className="mt-2 text-sm leading-7 text-[#8B1E3F]">{project.time}</p>
@@ -620,7 +488,7 @@ function ProjectsServicesSection() {
   )
 }
 
-function AwardsSection() {
+function AwardsSection({ awards }: { awards: Award[] }) {
   return (
     <section id="awards" className="border-t border-slate-200 bg-slate-950 text-white">
       <div className="mx-auto max-w-6xl px-6 py-16">
@@ -643,16 +511,33 @@ function AwardsSection() {
 }
 
 export default function App() {
+  const content = useSiteContent()
   const [selectedYear, setSelectedYear] = useState('All')
   const [selectedTheme, setSelectedTheme] = useState('All')
+
+  const publications = useMemo(
+    () => content.publications.map(normalizePublication),
+    [content.publications],
+  )
+
+  useEffect(() => {
+    const years = uniqueSortedYears(publications)
+    const themes = uniqueThemes(publications)
+    if (!years.includes(selectedYear)) {
+      setSelectedYear('All')
+    }
+    if (!themes.includes(selectedTheme)) {
+      setSelectedTheme('All')
+    }
+  }, [publications, selectedTheme, selectedYear])
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950">
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
           <a href="#about" className="text-left">
-            <h1 className="text-lg font-semibold tracking-tight text-slate-950">Xi Wei</h1>
-            <p className="text-sm text-slate-500">Urban Planning · Mobility · Accessibility</p>
+            <h1 className="text-lg font-semibold tracking-tight text-slate-950">{content.profile.name}</h1>
+            <p className="text-sm text-slate-500">Urban Planning - Mobility - Accessibility</p>
           </a>
           <nav className="flex flex-wrap gap-2 md:gap-3" aria-label="Primary navigation">
             {navItems.map((item) => (
@@ -669,22 +554,23 @@ export default function App() {
       </header>
 
       <main>
-        <HeroSection />
-        <AboutDetails />
+        <HeroSection profile={content.profile} publicationCount={publications.length} researchCount={content.researchAreas.length} />
+        <AboutDetails profile={content.profile} researchAreas={content.researchAreas} education={content.education} />
         <PublicationsSection
+          publications={publications}
           selectedYear={selectedYear}
           setSelectedYear={setSelectedYear}
           selectedTheme={selectedTheme}
           setSelectedTheme={setSelectedTheme}
         />
-        <ProjectsServicesSection />
-        <AwardsSection />
+        <ProjectsServicesSection projects={content.projects} services={content.services} />
+        <AwardsSection awards={content.awards} />
       </main>
 
       <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-8 text-sm text-slate-500 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} Xi Wei. Built with React, Vite, and GitHub Pages.</p>
-          <a href="mailto:weixi1998@connect.hku.hk" className="hover:text-[#1E3A5F]">weixi1998@connect.hku.hk</a>
+          <p>© {new Date().getFullYear()} {content.profile.name}. Built with React, Vite, and GitHub Pages.</p>
+          <a href={`mailto:${content.profile.email}`} className="hover:text-[#1E3A5F]">{content.profile.email}</a>
         </div>
       </footer>
     </div>
